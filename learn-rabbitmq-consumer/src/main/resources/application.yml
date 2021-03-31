@@ -1,0 +1,9 @@
+server:
+  port: 8081
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: learn-rabbitmq
+    password: 123456
+    virtual-host: /learn-rabbitmq
