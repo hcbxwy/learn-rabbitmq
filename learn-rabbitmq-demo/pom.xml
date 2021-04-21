@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>learn-rabbitmq</artifactId>
-        <groupId>com.hcbxwy</groupId>
+        <groupId>com.hcbxwy.rabbitmq</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>learn-rabbitmq-demo</artifactId>
