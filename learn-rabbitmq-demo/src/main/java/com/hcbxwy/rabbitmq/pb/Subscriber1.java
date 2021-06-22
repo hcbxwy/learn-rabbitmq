@@ -17,10 +17,6 @@ public class Subscriber1 {
         Connection connection = ConnectionUtil.newConnection();
         Channel channel = connection.createChannel();
 
-        channel.exchangeDeclare(Publisher.FANOUT_EXCHANGE, BuiltinExchangeType.FANOUT);
-        channel.queueDeclare(Publisher.FANOUT_QUEUE_1, true, false, false, null);
-        channel.queueBind(Publisher.FANOUT_QUEUE_1, Publisher.FANOUT_EXCHANGE, "");
-
         // 创建消费者，并设置消息处理
         DefaultConsumer consumer = new DefaultConsumer(channel){
             @Override
