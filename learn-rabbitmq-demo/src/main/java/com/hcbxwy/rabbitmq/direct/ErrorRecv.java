@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
  * @author Billson
  * @date 2021/3/29 20:53
  */
-public class Subscriber2 {
+public class ErrorRecv {
 
     public static void main(String[] args) throws Exception {
         Connection connection = ConnectionUtil.newConnection();
@@ -24,7 +24,7 @@ public class Subscriber2 {
                 System.err.println("路由key为：" + envelope.getRoutingKey());
                 System.err.println("交换机为：" + envelope.getExchange());
                 System.err.println("消息ID为：" + envelope.getDeliveryTag());
-                System.err.println("订阅者1收到的消息：" + new String(body, StandardCharsets.UTF_8));
+                System.err.println("error收到的消息：" + new String(body, StandardCharsets.UTF_8));
             }
         };
 
@@ -34,6 +34,6 @@ public class Subscriber2 {
          * 参数1：是否自动确认
          * 参数1：消息收到后回调
          */
-        channel.basicConsume(Publisher.DIRECT_QUEUE_2, true, consumer);
+        channel.basicConsume(LogPublisher.QUEUE_ERROR, true, consumer);
     }
 }

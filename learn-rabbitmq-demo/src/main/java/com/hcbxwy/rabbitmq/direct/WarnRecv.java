@@ -6,12 +6,12 @@ import com.rabbitmq.client.*;
 import java.nio.charset.StandardCharsets;
 
 /**
- * 订阅者1
+ * 订阅者2
  *
  * @author Billson
  * @date 2021/3/29 20:53
  */
-public class Subscriber1 {
+public class WarnRecv {
 
     public static void main(String[] args) throws Exception {
         Connection connection = ConnectionUtil.newConnection();
@@ -24,7 +24,7 @@ public class Subscriber1 {
                 System.err.println("路由key为：" + envelope.getRoutingKey());
                 System.err.println("交换机为：" + envelope.getExchange());
                 System.err.println("消息ID为：" + envelope.getDeliveryTag());
-                System.err.println("订阅者1收到的消息：" + new String(body, StandardCharsets.UTF_8));
+                System.err.println("warn收到的消息：" + new String(body, StandardCharsets.UTF_8));
             }
         };
 
@@ -34,6 +34,6 @@ public class Subscriber1 {
          * 参数1：是否自动确认
          * 参数1：消息收到后回调
          */
-        channel.basicConsume(Publisher.DIRECT_QUEUE_1, true, consumer);
+        channel.basicConsume(LogPublisher.QUEUE_WARN, true, consumer);
     }
 }
