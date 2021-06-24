@@ -24,11 +24,11 @@ public class Publisher {
             for (int i = 1; i <= 50; i++) {
                 String message = String.format("爱妃，我爱你第%d遍", i);
                 if (i % 2 == 0) {
-                    channel.basicPublish(TOPIC_EXCHANGE, "item.abc", null, message.getBytes());
+                    channel.basicPublish(TOPIC_EXCHANGE, "item.#", null, message.getBytes());
                 } else {
-                    channel.basicPublish(TOPIC_EXCHANGE, "abc.queue", null, message.getBytes());
+                    channel.basicPublish(TOPIC_EXCHANGE, "*.queue", null, message.getBytes());
                 }
-                System.err.println(String.format("已发送消息：%s", message));
+                System.err.printf("已发送消息：%s%n", message);
             }
         }
     }

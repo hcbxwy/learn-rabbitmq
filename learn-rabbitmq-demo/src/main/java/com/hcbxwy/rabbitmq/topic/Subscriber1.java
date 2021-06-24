@@ -16,6 +16,7 @@ public class Subscriber1 {
     public static void main(String[] args) throws Exception {
         Connection connection = ConnectionUtil.newConnection();
         Channel channel = connection.createChannel();
+        channel.queueDeclare("item.queue", true, false, false, null);
 
         // 创建消费者，并设置消息处理
         DefaultConsumer consumer = new DefaultConsumer(channel){
