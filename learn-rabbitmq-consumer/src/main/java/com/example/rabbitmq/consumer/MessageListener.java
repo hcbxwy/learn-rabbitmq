@@ -12,8 +12,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessageListener {
 
-    @RabbitListener(queues = "topic.queue")
-    public void handleMessage(String message) {
-        System.err.println("消息接收器收到的消息：" + message);
+    @RabbitListener(queues = QueueName.DIRECT_QUEUE)
+    public void handleDirectQueue(String message) {
+        System.err.printf("队列%s收到的消息：%s%n", QueueName.DIRECT_QUEUE, message);
+    }
+
+    @RabbitListener(queues = QueueName.TOPIC_QUEUE)
+    public void handleTopicQueue(String message) {
+        System.err.printf("队列%s收到的消息：%s%n", QueueName.TOPIC_QUEUE, message);
+    }
+
+    @RabbitListener(queues = QueueName.FANOUT_QUEUE)
+    public void handleFanoutQueue(String message) {
+        System.err.printf("队列%s收到的消息：%s%n", QueueName.FANOUT_QUEUE, message);
     }
 }

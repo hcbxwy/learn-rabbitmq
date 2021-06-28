@@ -14,37 +14,82 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitmqConfig {
 
-    /**
-     * 交换机名称
-     */
-    public final static String MY_TOPIC_EXCHANGE = "my.topic";
-    /**
-     * 队列名称
-     */
-    public static final String TOPIC_QUEUE = "topic.queue";
+    private static final String DIRECT_EXCHANGE = "directExchange";
+    private static final String TOPIC_EXCHANGE = "topicExchange";
+    private static final String FANOUT_EXCHANGE = "fanoutExchange";
 
     /**
-     * 声明交换机
+     * 直连交换机（路由模式交换机）
      */
-    @Bean("myTopicExchange")
-    public Exchange myTopicExchange() {
-        return ExchangeBuilder.topicExchange(MY_TOPIC_EXCHANGE).durable(true).build();
+    @Bean(DIRECT_EXCHANGE)
+    public Exchange directExchange() {
+        return ExchangeBuilder.directExchange(DefaultExchange.DIRECT).durable(true).build();
     }
 
     /**
-     * 声明队列
+     * 主题交换机（通配符模式/发布订阅交换机）
+     */
+    @Bean(TOPIC_EXCHANGE)
+    public Exchange topicExchange() {
+        return ExchangeBuilder.topicExchange(DefaultExchange.TOPIC).durable(true).build();
+    }
+
+    /**
+     * 广播交换机
+     */
+    @Bean(FANOUT_EXCHANGE)
+    public Exchange fanoutExchange() {
+        return ExchangeBuilder.fanoutExchange(DefaultExchange.FANOUT).durable(true).build();
+    }
+
+    /**
+     * 主题队列
      */
     @Bean
     public Queue topicQueue() {
-        return QueueBuilder.durable(TOPIC_QUEUE).build();
+        return QueueBuilder.durable(QueueName.TOPIC_QUEUE).build();
     }
 
     /**
-     * 绑定队列和交换机
+     * 广播队列
      */
     @Bean
-    public Binding topicQueueExchange(@Qualifier("topicQueue") Queue topicQueue,
-                                      @Qualifier("myTopicExchange") Exchange myTopicExchange) {
-        return BindingBuilder.bind(topicQueue).to(myTopicExchange).with("topic.#").noargs();
+    public Queue fanoutQueue() {
+        return QueueBuilder.durable(QueueName.FANOUT_QUEUE).build();
+    }
+
+    /**
+     * 直连队列
+     */
+    @Bean
+    public Queue directQueue() {
+        return QueueBuilder.durable(QueueName.DIRECT_QUEUE).build();
+    }
+
+    /**
+     * 主题队列绑定到主题交换机
+     */
+    @Bean
+    public Binding topicQueueBinding(@Qualifier("topicQueue") Queue topicQueue,
+                                      @Qualifier(TOPIC_EXCHANGE) Exchange topicExchange) {
+        return BindingBuilder.bind(topicQueue).to(topicExchange).with("topic.#").noargs();
+    }
+
+    /**
+     * 广播队列绑定到广播交换机
+     */
+    @Bean
+    public Binding fanoutQueueBinding(@Qualifier("fanoutQueue") Queue fanoutQueue,
+                                     @Qualifier(FANOUT_EXCHANGE) Exchange fanoutExchange) {
+        return BindingBuilder.bind(fanoutQueue).to(fanoutExchange).with("").noargs();
+    }
+
+    /**
+     * 直连队列绑定到直连交换机
+     */
+    @Bean
+    public Binding directQueueBinding(@Qualifier("directQueue") Queue directQueue,
+                                     @Qualifier(DIRECT_EXCHANGE) Exchange directExchange) {
+        return BindingBuilder.bind(directQueue).to(directExchange).with("direct").noargs();
     }
 }

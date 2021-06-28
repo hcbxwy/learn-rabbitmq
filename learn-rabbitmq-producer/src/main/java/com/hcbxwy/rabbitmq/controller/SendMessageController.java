@@ -1,6 +1,6 @@
 package com.hcbxwy.rabbitmq.controller;
 
-import com.hcbxwy.rabbitmq.config.RabbitmqConfig;
+import com.hcbxwy.rabbitmq.config.DefaultExchange;
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ public class SendMessageController {
     private final RabbitTemplate rabbitTemplate;
 
     /**
-     * 发送消息
+     * 发送消息到主题交换机
      *
      * @param msg 消息内容
      * @param key 路由key
@@ -30,9 +30,38 @@ public class SendMessageController {
      * @author Billson
      * @date 2021/3/31 下午8:41
      */
-    @GetMapping("/send")
-    public String send(@RequestParam String msg, @RequestParam String key) {
-        rabbitTemplate.convertAndSend(RabbitmqConfig.MY_TOPIC_EXCHANGE, key, msg);
+    @GetMapping("/send/topic")
+    public String sendTopic(@RequestParam String msg, @RequestParam String key) {
+        rabbitTemplate.convertAndSend(DefaultExchange.TOPIC, key, msg);
+        return "发送消息成功！";
+    }
+
+    /**
+     * 发送消息到广播交换机
+     *
+     * @param msg 消息内容
+     * @return java.lang.String
+     * @author Billson
+     * @date 2021/3/31 下午8:41
+     */
+    @GetMapping("/send/fanout")
+    public String sendFanout(@RequestParam String msg) {
+        rabbitTemplate.convertAndSend(DefaultExchange.FANOUT, "", msg);
+        return "发送消息成功！";
+    }
+
+    /**
+     * 发送消息到直连交换机
+     *
+     * @param msg 消息内容
+     * @param key 路由key
+     * @return java.lang.String
+     * @author Billson
+     * @date 2021/3/31 下午8:41
+     */
+    @GetMapping("/send/direct")
+    public String sendDirect(@RequestParam String msg, @RequestParam String key) {
+        rabbitTemplate.convertAndSend(DefaultExchange.DIRECT, key, msg);
         return "发送消息成功！";
     }
 }
