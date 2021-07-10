@@ -2,7 +2,7 @@ package com.hcbxwy.rabbitmq.controller;
 
 import com.hcbxwy.rabbitmq.config.DefaultExchange;
 import lombok.AllArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class SendMessageController {
 
-    private final RabbitTemplate rabbitTemplate;
+    private final AmqpTemplate amqpTemplate;
 
     /**
      * 发送消息到主题交换机
@@ -32,7 +32,7 @@ public class SendMessageController {
      */
     @GetMapping("/send/topic")
     public String sendTopic(@RequestParam String msg, @RequestParam String routingKey) {
-        rabbitTemplate.convertAndSend(DefaultExchange.TOPIC, routingKey, msg);
+        amqpTemplate.convertAndSend(DefaultExchange.TOPIC, routingKey, msg);
         return "发送消息成功！";
     }
 
@@ -46,7 +46,7 @@ public class SendMessageController {
      */
     @GetMapping("/send/fanout")
     public String sendFanout(@RequestParam String msg) {
-        rabbitTemplate.convertAndSend(DefaultExchange.FANOUT, "", msg);
+        amqpTemplate.convertAndSend(DefaultExchange.FANOUT, "", msg);
         return "发送消息成功！";
     }
 
@@ -61,7 +61,7 @@ public class SendMessageController {
      */
     @GetMapping("/send/direct")
     public String sendDirect(@RequestParam String msg, @RequestParam String routingKey) {
-        rabbitTemplate.convertAndSend(DefaultExchange.DIRECT, routingKey, msg);
+        amqpTemplate.convertAndSend(DefaultExchange.DIRECT, routingKey, msg);
         return "发送消息成功！";
     }
 }
